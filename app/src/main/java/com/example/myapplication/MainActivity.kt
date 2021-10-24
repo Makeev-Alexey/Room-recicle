@@ -18,6 +18,6 @@ class MainActivity : AppCompatActivity() {
         var viewModel = ViewModelProvider(this).get(AnectodeViewModel::class.java)
         var adapter = AnecdoteAdapter(mutableListOf())
         binding.recicle.adapter = adapter
-        viewModel.getLive().observe(this, Observer{adapter.setAnecdote(it as MutableList<Anecdote>)})
+        viewModel.getLive(this).observe(this, Observer{adapter.setAnecdote(it as MutableList<Anecdote>)})
     }
 }

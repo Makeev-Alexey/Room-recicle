@@ -56,9 +56,10 @@ class AnecdoteAdapter(var anecdotes: MutableList<Anecdote>) :
 //            itemView.site_text.text = anecdote.site
 //        }
     }
-    fun setAnecdote(anecdotes: MutableList<Anecdote>) {
+    fun setAnecdote(anecdotes: List<Anecdote>) {
         this.anecdotes.clear()
         this.anecdotes.addAll(anecdotes)
+        println(anecdotes + ".....")
         notifyDataSetChanged()
     }
 }

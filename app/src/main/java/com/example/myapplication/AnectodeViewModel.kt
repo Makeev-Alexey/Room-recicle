@@ -5,30 +5,31 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.API.Anecdote
+import com.example.myapplication.API.Controller
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.repository.AnecdoteRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AnectodeViewModel : ViewModel() {
-    var repository = AnecdoteRepository()
-    var list = MutableLiveData<List<Anecdote>?>()
-    fun getLive(context: MainActivity) : MutableLiveData<List<Anecdote>?> {
-        var r = mutableListOf<Anecdote>()
-        CoroutineScope(Dispatchers.IO).launch {
+class AnectodeViewModel(var repository : AnecdoteRepository) : ViewModel() {
 
-            repository.getListNetwork(context)
-//            repository.list.observe(context, {
-//                if (it != null) {
-//                    repository.saveList(it, context)
-//                }
-//            })
+    var liveData = MutableLiveData<List<Anecdote>>()
+    fun loadAndPutInDatabase() {
+        viewModelScope.launch(Dispatchers.IO) { repository.loadAndPutInDatabase() }
+    }
+    fun list(){
+        viewModelScope.launch(Dispatchers.IO) {
 
-            repository.getListDB(context)?.let { r.addAll(it) }
+            liveData.postValue(repository.getAllAnecdotesDB())
         }
-        list.value = r
-        return list
+    }
+    fun listDB(){
+        viewModelScope.launch(Dispatchers.IO) {
+
+            liveData.postValue(repository.getAllAnecdotesDB())
+        }
     }
 }
